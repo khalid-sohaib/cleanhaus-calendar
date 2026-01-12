@@ -1,0 +1,26 @@
+# Source files (only ship compiled code from dist/)
+*.ts
+*.tsx
+!*.d.ts
+
+# Development files
+.git
+.github
+.vscode
+.idea
+tsconfig.json
+tsup.config.ts
+*.test.*
+*.spec.*
+__tests__/
+tests/
+
+# Documentation (keep only essential)
+PACKAGING.md
+
+# Build config
+.gitignore
+
+# Logs and temp
+*.log
+.DS_Store

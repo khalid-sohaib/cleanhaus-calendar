@@ -1,56 +1,68 @@
 {
-  "name": "@cleanhaus/calendar",
+  "name": "cleanhaus-calendar",
   "version": "1.0.0",
   "description": "Cross-platform calendar component for React Native and Web",
-  "main": "index.ts",
-  "types": "index.ts",
-  "react-native": "index.ts",
-  "module": "index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "react-native": "./dist/index.js",
+  "browser": "./dist/web.js",
   "exports": {
     ".": {
-      "types": "./index.ts",
-      "react-native": "./index.ts",
-      "import": "./index.ts",
-      "require": "./index.ts",
-      "default": "./index.ts"
+      "react-native": "./dist/index.js",
+      "browser": "./dist/web.js",
+      "default": "./dist/index.esm.js"
     },
     "./next-plugin": "./next-plugin.js",
     "./package.json": "./package.json"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "next-plugin.js"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "type-check": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
   "keywords": [
     "react-native",
     "calendar",
-    "react",
-    "nextjs",
     "web",
-    "mobile",
-    "typescript"
+    "cross-platform",
+    "expo",
+    "typescript",
+    "cleanhaus"
   ],
-  "author": "khalidsohaib",
+  "author": "CleanHaus",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/cleanhaus/calendar-component.git"
   },
   "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-native": ">=0.70.0",
-    "react-native-web": ">=0.19.0",
-    "react-native-reanimated": ">=3.0.0",
+    "calendarize": "^1.1.0",
     "dayjs": "^1.11.0",
-    "calendarize": "^1.1.0"
+    "react": "^18.0.0",
+    "react-native": "^0.70.0",
+    "react-native-reanimated": "^3.0.0",
+    "react-native-web": "^0.19.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-web": {
+      "optional": true
+    },
+    "react-native-reanimated": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@types/node": "^25.0.3",
     "@types/react": "^18.0.0",
-    "@types/react-native": "^0.70.0"
-  },
-  "files": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.png",
-    "**/*.js",
-    "README.md",
-    "next-plugin.js"
-  ]
+    "@types/react-native": "^0.73.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.0.0"
+  }
 }
-
