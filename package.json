@@ -1,0 +1,56 @@
+{
+  "name": "@cleanhaus/calendar",
+  "version": "1.0.0",
+  "description": "Cross-platform calendar component for React Native and Web",
+  "main": "index.ts",
+  "types": "index.ts",
+  "react-native": "index.ts",
+  "module": "index.ts",
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "react-native": "./index.ts",
+      "import": "./index.ts",
+      "require": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./next-plugin": "./next-plugin.js",
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "react-native",
+    "calendar",
+    "react",
+    "nextjs",
+    "web",
+    "mobile",
+    "typescript"
+  ],
+  "author": "khalidsohaib",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-native": ">=0.70.0",
+    "react-native-web": ">=0.19.0",
+    "react-native-reanimated": ">=3.0.0",
+    "dayjs": "^1.11.0",
+    "calendarize": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-native": "^0.70.0"
+  },
+  "files": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.png",
+    "**/*.js",
+    "README.md",
+    "next-plugin.js"
+  ]
+}
+
