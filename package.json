@@ -1,6 +1,6 @@
 {
   "name": "cleanhaus-calendar",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Cross-platform calendar component for React Native and Web",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

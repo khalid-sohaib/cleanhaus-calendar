@@ -42,11 +42,35 @@ export const CustomCalendar: React.FC<CalendarProps> = ({
   autoScrollToNow = false,
   cleaningIcon,
 }) => {
+  // ✅ ALL HOOKS MUST BE CALLED FIRST - BEFORE ANY CONDITIONAL RETURNS
+  // This ensures hooks are called in the same order on every render (Rules of Hooks)
+  
   // SSR-safe: Only render on client to prevent hydration errors
   const [isMounted, setIsMounted] = useState(false);
+  
+  // Get initial screen height as estimate for MonthView container sizing
+  // SSR-safe: Use 0 as fallback for server-side rendering
+  const getInitialHeight = () => {
+    if (typeof window === "undefined") return 0; // SSR fallback
+    try {
+      return Dimensions.get("window").height;
+    } catch {
+      return 0; // Fallback if Dimensions.get fails
+    }
+  };
+  const [height, setHeight] = useState(getInitialHeight);
+  const [viewKey, setViewKey] = useState(0); // Track view changes to force remount
+
+  // Mount effect - set isMounted to true after first render
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Reset height and force remount when view changes to ensure proper dimension restoration
+  useEffect(() => {
+    setHeight(0); // Reset to force remeasurement
+    setViewKey((prev) => prev + 1); // Force remount of container
+  }, [view]);
 
   // Validate props in development mode
   useEffect(() => {
@@ -62,35 +86,10 @@ export const CustomCalendar: React.FC<CalendarProps> = ({
     }
   }, [events, date, onDateChange, onEventPress, view]);
 
-  // Merge user theme with default theme
+  // Merge user theme with default theme (not a hook, but needed before returns)
   const mergedTheme = mergeTheme(theme);
   
-  // During SSR, render minimal placeholder (prevents hydration mismatch)
-  if (!isMounted) {
-    return (
-      <View style={[styles.container, { backgroundColor: mergedTheme.background }]} />
-    );
-  }
-
-  // Get initial screen height as estimate for MonthView container sizing
-  // SSR-safe: Use 0 as fallback for server-side rendering
-  const getInitialHeight = () => {
-    if (typeof window === "undefined") return 0; // SSR fallback
-    try {
-      return Dimensions.get("window").height;
-    } catch {
-      return 0; // Fallback if Dimensions.get fails
-    }
-  };
-  const [height, setHeight] = useState(getInitialHeight);
-  const [viewKey, setViewKey] = useState(0); // Track view changes to force remount
-
-  // Reset height and force remount when view changes to ensure proper dimension restoration
-  React.useEffect(() => {
-    setHeight(0); // Reset to force remeasurement
-    setViewKey((prev) => prev + 1); // Force remount of container
-  }, [view]);
-
+  // ✅ ALL HOOKS (including useCallback) MUST BE CALLED BEFORE CONDITIONAL RETURNS
   // Unified handler for date+time changes that navigates to day view
   const handleDateTimeChange = useCallback(
     (dateTime: Date) => {
@@ -155,10 +154,18 @@ export const CustomCalendar: React.FC<CalendarProps> = ({
     [handleDateTimeChange]
   );
 
-  // Handle month change from swipe gestures
+  // Handle month change from swipe gestures (not a hook, just a regular function)
   const handleMonthChange = (newDate: Date) => {
     onDateChange(newDate);
   };
+  
+  // ✅ NOW safe to do conditional returns - ALL hooks have been called
+  // During SSR, render minimal placeholder (prevents hydration mismatch)
+  if (!isMounted) {
+    return (
+      <View style={[styles.container, { backgroundColor: mergedTheme.background }]} />
+    );
+  }
 
   // Show loading spinner while fetching data
   if (isLoading) {
