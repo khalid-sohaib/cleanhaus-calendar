@@ -1,5 +1,5 @@
 // React Native Calendar Component - Uses only RN components
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -7,6 +7,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
+import type { LayoutChangeEvent } from "react-native";
 import { CalendarProps, CalendarEvent } from "./types";
 import { MonthView } from "./MonthView";
 import { DayView } from "./DayView";
@@ -18,6 +19,7 @@ import {
   DEFAULT_PROPERTY_COLORS,
   DEFAULT_PROPERTY_COLORS_DARK,
 } from "./utils/propertyColors";
+import { validateCalendarProps, logValidationErrors } from "./utils/validation";
 
 export const CustomCalendar: React.FC<CalendarProps> = ({
   events = [],
@@ -40,6 +42,20 @@ export const CustomCalendar: React.FC<CalendarProps> = ({
   autoScrollToNow = false,
   cleaningIcon,
 }) => {
+  // Validate props in development mode
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      const errors = validateCalendarProps({
+        events,
+        date,
+        onDateChange,
+        onEventPress,
+        view,
+      });
+      logValidationErrors(errors);
+    }
+  }, [events, date, onDateChange, onEventPress, view]);
+
   // Merge user theme with default theme
   const mergedTheme = mergeTheme(theme);
 
@@ -155,7 +171,7 @@ export const CustomCalendar: React.FC<CalendarProps> = ({
       <View
         key={`month-${viewKey}`} // Force remount on view change
         style={[styles.container, { backgroundColor: mergedTheme.background }]}
-        onLayout={(e) => {
+        onLayout={(e: LayoutChangeEvent) => {
           const newHeight = e.nativeEvent.layout.height;
           if (newHeight > 0) {
             setHeight(newHeight);

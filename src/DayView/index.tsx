@@ -197,9 +197,7 @@ export const DayView: React.FC<DayViewProps> = ({
     <CalendarErrorBoundary
       theme={theme}
       onError={(error, errorInfo) => {
-        if (process.env.NODE_ENV !== "production") {
-          console.error("DayView Error:", error, errorInfo);
-        }
+        // Error handled by ErrorBoundary's onError callback
       }}
     >
       <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -238,7 +236,7 @@ export const DayView: React.FC<DayViewProps> = ({
             showsVerticalScrollIndicator={true}
             showsHorizontalScrollIndicator={false}
             onScroll={useAnimatedScrollHandler({
-              onScroll: (event) => {
+              onScroll: (event: { contentOffset: { y: number } }) => {
                 scrollY.value = event.contentOffset.y;
               },
             })}
@@ -310,19 +308,21 @@ const createStyles = (theme: CalendarTheme) =>
     container: {
       flex: 1,
       // Web-specific: Ensure container has constrained height for scrolling
-      ...(Platform.OS === 'web' && typeof window !== 'undefined' && {
-        height: '100%',
-        minHeight: 0, // Important for flex children on web
-      }),
+      ...(Platform.OS === "web" &&
+        typeof window !== "undefined" && {
+          height: "100%",
+          minHeight: 0, // Important for flex children on web
+        }),
     },
     contentContainer: {
       flex: 1,
       backgroundColor: theme.background,
       // Web-specific: Constrain height for scrolling
-      ...(Platform.OS === 'web' && typeof window !== 'undefined' && {
-        height: '100%',
-        minHeight: 0,
-      }),
+      ...(Platform.OS === "web" &&
+        typeof window !== "undefined" && {
+          height: "100%",
+          minHeight: 0,
+        }),
     },
     stickyHeadersContainer: {
       flexDirection: "row",
@@ -336,9 +336,10 @@ const createStyles = (theme: CalendarTheme) =>
     stickyHeadersScroll: {
       flex: 1,
       // Web-specific: Ensure horizontal scrolling works
-      ...(Platform.OS === 'web' && typeof window !== 'undefined' && {
-        minHeight: 0,
-      }),
+      ...(Platform.OS === "web" &&
+        typeof window !== "undefined" && {
+          minHeight: 0,
+        }),
     },
     stickyHeadersRow: {
       flexDirection: "row",
@@ -347,15 +348,16 @@ const createStyles = (theme: CalendarTheme) =>
       flex: 1,
       paddingTop: CONTENT_PADDING_TOP,
       // Web-specific: Explicit height constraint and overflow for scrolling
-      ...(Platform.OS === 'web' && typeof window !== 'undefined' && {
-        height: '100%',
-        maxHeight: '100%',
-        minHeight: 0,
-        // @ts-ignore - web-specific CSS properties
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        WebkitOverflowScrolling: 'touch',
-      }),
+      ...(Platform.OS === "web" &&
+        typeof window !== "undefined" && {
+          height: "100%",
+          maxHeight: "100%",
+          minHeight: 0,
+          // @ts-ignore - web-specific CSS properties
+          overflowY: "auto",
+          overflowX: "hidden",
+          WebkitOverflowScrolling: "touch",
+        }),
     },
     content: {
       flexDirection: "row",
@@ -368,13 +370,14 @@ const createStyles = (theme: CalendarTheme) =>
     propertyLanesScroll: {
       flex: 1,
       // Web-specific: Ensure horizontal scrolling works
-      ...(Platform.OS === 'web' && typeof window !== 'undefined' && {
-        minHeight: 0,
-        // @ts-ignore - web-specific CSS properties
-        overflowX: 'auto',
-        overflowY: 'hidden',
-        WebkitOverflowScrolling: 'touch',
-      }),
+      ...(Platform.OS === "web" &&
+        typeof window !== "undefined" && {
+          minHeight: 0,
+          // @ts-ignore - web-specific CSS properties
+          overflowX: "auto",
+          overflowY: "hidden",
+          WebkitOverflowScrolling: "touch",
+        }),
     },
     propertyLanesRow: {
       flexDirection: "row",

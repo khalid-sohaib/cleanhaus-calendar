@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import { CalendarEvent } from "../types";
 import { EventPosition, HorizontalPosition } from "./types";
@@ -16,7 +17,7 @@ dayjs.extend(isBetween);
  */
 export function getHorizontalPositionInDay(
   event: CalendarEvent,
-  date: dayjs.Dayjs,
+  date: Dayjs,
   cellWidth: number
 ): HorizontalPosition {
   const dayStart = date.startOf("day");
@@ -51,7 +52,7 @@ export function getHorizontalPositionInDay(
  */
 export function getMultiDayPosition(
   event: CalendarEvent,
-  weekStartDate: dayjs.Dayjs,
+  weekStartDate: Dayjs,
   weekIndex: number,
   cellWidth: number
 ): EventPosition | null {
@@ -212,7 +213,7 @@ export function assignGlobalRows(
 export function calculateOverflowByDay(
   eventPositions: EventPosition[],
   weeks: number[][],
-  target: dayjs.Dayjs,
+  target: Dayjs,
   maxVisibleRows: number
 ): Map<string, number> {
   const overflowMap = new Map<string, number>();

@@ -19,7 +19,7 @@
   "files": [
     "**/*.ts",
     "**/*.tsx",
-    "shared/**/*.png",
+    "src/shared/**/*.png",
     "README.md",
     "LICENSE",
     "CHANGELOG.md",

@@ -2,6 +2,7 @@ import calendarize from "calendarize";
 import dayjs from "dayjs";
 import * as React from "react";
 import { Text, TouchableOpacity, View, Dimensions } from "react-native";
+import type { LayoutChangeEvent } from "react-native";
 import { CalendarEvent } from "../types";
 import { CalendarTheme } from "../utils/theme";
 import { useSwipeGesture } from "../hooks";
@@ -146,8 +147,8 @@ export const MonthView: React.FC<MonthViewProps> = ({
         // borderColor: theme.border,
         // borderRadius: 4,
       }}
-      onLayout={({ nativeEvent: { layout } }) => {
-        setCalendarWidth(layout.width);
+      onLayout={(e: LayoutChangeEvent) => {
+        setCalendarWidth(e.nativeEvent.layout.width);
       }}
       {...panResponder.panHandlers}
     >

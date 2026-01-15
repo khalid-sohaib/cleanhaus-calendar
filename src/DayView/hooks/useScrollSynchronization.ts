@@ -39,7 +39,7 @@ export const useScrollSynchronization = () => {
    * Runs on UI thread for zero-latency synchronization
    */
   const handleHeaderScroll = useAnimatedScrollHandler({
-    onScroll: (event) => {
+    onScroll: (event: { contentOffset: { x: number; y: number } }) => {
       // Ignore if content is currently being scrolled by user
       if (isContentScrolling.value) {
         return;
@@ -69,7 +69,7 @@ export const useScrollSynchronization = () => {
    * Runs on UI thread for zero-latency synchronization
    */
   const handleContentScroll = useAnimatedScrollHandler({
-    onScroll: (event) => {
+    onScroll: (event: { contentOffset: { x: number; y: number } }) => {
       // Ignore if header is currently being scrolled by user
       if (isHeaderScrolling.value) {
         return;

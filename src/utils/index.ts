@@ -20,6 +20,9 @@ export * from "./eventHelpers";
 // Property colors
 export * from "./propertyColors";
 
+// Validation utilities
+export * from "./validation";
+
 // Platform detection utilities
 export * from "./platform";
 

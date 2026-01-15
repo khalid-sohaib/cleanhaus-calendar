@@ -32,7 +32,7 @@ export const OverflowIndicator: React.FC<OverflowIndicatorProps> = ({
         // backgroundColor: `${theme.text}10`,
         zIndex: 200,
       }}
-      onPress={(e) => {
+      onPress={(e: any) => {
         e.stopPropagation(); // Prevent day cell click
         onPress();
       }}

@@ -73,7 +73,7 @@ export const WeekView: React.FC<WeekViewProps> = ({
 }) => {
   // SSR-safe: useWindowDimensions may not be available during SSR
   const windowDimensions = useWindowDimensions();
-  const width = typeof window !== 'undefined' ? windowDimensions.width : 0;
+  const width = typeof window !== "undefined" ? windowDimensions.width : 0;
   const dayColumnWidth = Math.floor((width - TIME_COLUMN_WIDTH) / 7);
 
   const totalHeight = HOURS_IN_DAY * WEEK_VIEW_HOUR_HEIGHT;
@@ -184,9 +184,7 @@ export const WeekView: React.FC<WeekViewProps> = ({
     <CalendarErrorBoundary
       theme={theme}
       onError={(error, errorInfo) => {
-        if (process.env.NODE_ENV !== "production") {
-          console.error("WeekView Error:", error, errorInfo);
-        }
+        // Error handled by ErrorBoundary's onError callback
       }}
     >
       <View style={styles.container}>
@@ -237,7 +235,7 @@ export const WeekView: React.FC<WeekViewProps> = ({
           showsVerticalScrollIndicator
           showsHorizontalScrollIndicator={false}
           onScroll={useAnimatedScrollHandler({
-            onScroll: (event) => {
+            onScroll: (event: { contentOffset: { y: number } }) => {
               scrollY.value = event.contentOffset.y;
             },
           })}
@@ -339,10 +337,11 @@ const createStyles = (theme: CalendarTheme, totalHeight: number) =>
       backgroundColor: theme.background,
       position: "relative",
       // Web-specific: Ensure container has constrained height for scrolling
-      ...(Platform.OS === 'web' && typeof window !== 'undefined' && {
-        height: '100%',
-        minHeight: 0, // Important for flex children on web
-      }),
+      ...(Platform.OS === "web" &&
+        typeof window !== "undefined" && {
+          height: "100%",
+          minHeight: 0, // Important for flex children on web
+        }),
     },
     todayHighlight: {
       position: "absolute",
@@ -367,15 +366,16 @@ const createStyles = (theme: CalendarTheme, totalHeight: number) =>
       flex: 1,
       paddingTop: DAY_OVERFLOW_TOP_INSET,
       // Web-specific: Explicit height constraint and overflow for scrolling
-      ...(Platform.OS === 'web' && typeof window !== 'undefined' && {
-        height: '100%',
-        maxHeight: '100%',
-        minHeight: 0,
-        // @ts-ignore - web-specific CSS properties
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        WebkitOverflowScrolling: 'touch',
-      }),
+      ...(Platform.OS === "web" &&
+        typeof window !== "undefined" && {
+          height: "100%",
+          maxHeight: "100%",
+          minHeight: 0,
+          // @ts-ignore - web-specific CSS properties
+          overflowY: "auto",
+          overflowX: "hidden",
+          WebkitOverflowScrolling: "touch",
+        }),
     },
     content: {
       flexDirection: "row",

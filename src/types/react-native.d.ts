@@ -26,8 +26,30 @@ declare module 'react-native' {
   export const PanResponder: any;
   
   export type PanResponderInstance = any;
+  export type PanResponderGestureState = {
+    dx: number;
+    dy: number;
+    moveX: number;
+    moveY: number;
+    numberActiveTouches: number;
+    stateID: number;
+    vx: number;
+    vy: number;
+    x0: number;
+    y0: number;
+  };
   export type NativeSyntheticEvent<T> = any;
   export type NativeTouchEvent = any;
   export type StyleProp<T> = any;
+  export type LayoutChangeEvent = {
+    nativeEvent: {
+      layout: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      };
+    };
+  };
 }
 

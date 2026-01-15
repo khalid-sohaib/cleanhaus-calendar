@@ -38,9 +38,6 @@ export class CalendarErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Calendar Error:", error, errorInfo);
-    }
     this.props.onError?.(error, errorInfo);
   }
 

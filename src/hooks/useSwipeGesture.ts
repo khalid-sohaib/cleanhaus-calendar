@@ -1,5 +1,5 @@
 import { useRef, useMemo } from "react";
-import { PanResponder, PanResponderInstance, Platform } from "react-native";
+import { PanResponder, PanResponderInstance, PanResponderGestureState, Platform } from "react-native";
 
 /**
  * Configuration options for swipe gesture detection
@@ -76,7 +76,7 @@ export function useSwipeGesture(
        * Only respond to horizontal gestures (where horizontal movement > vertical movement).
        * See: https://stackoverflow.com/questions/47568850/touchableopacity-with-parent-panresponder
        */
-      onMoveShouldSetPanResponder: (_, gestureState) => {
+      onMoveShouldSetPanResponder: (_: any, gestureState: PanResponderGestureState) => {
         if (!enabled) {
           return false;
         }
@@ -97,7 +97,7 @@ export function useSwipeGesture(
        * Handle the gesture movement.
        * Trigger callbacks when threshold is exceeded.
        */
-      onPanResponderMove: (_, gestureState) => {
+      onPanResponderMove: (_: any, gestureState: PanResponderGestureState) => {
         const { dx, dy } = gestureState;
 
         // Ignore if:

@@ -33,13 +33,13 @@ export const WeekOverflowIndicator: React.FC<Props> = ({
 }) => {
   const label = showCount && count > 0 ? `+${count}` : undefined;
   // Use Unicode chevrons instead of icon library for web compatibility
-  const chevronSymbol = chevron === "up" ? "▲" : chevron === "down" ? "▼" : null;
+  const chevronSymbol =
+    chevron === "up" ? "▲" : chevron === "down" ? "▼" : null;
 
   return (
     <TouchableOpacity
       style={[styles.container, style]}
       onPress={() => {
-        console.log("WeekOverflowIndicator pressed");
         onPress && onPress();
       }}
       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
