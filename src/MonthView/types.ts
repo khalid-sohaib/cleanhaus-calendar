@@ -19,6 +19,7 @@ export interface MonthViewProps {
   availableProperties?: Array<{ id: number }>; // Optional: for consistent property colors
   propertyColors?: string[]; // Optional: custom property colors array
   propertyColorsDark?: string[]; // Optional: custom dark property colors array
+  cleaningIcon?: any; // Optional: custom cleaning icon (Image source)
 }
 
 export interface EventPosition {

@@ -1,11 +1,12 @@
 import { useRef } from "react";
 import { ScrollView } from "react-native";
-import Animated, {
+import {
+  Animated,
   useSharedValue,
   useAnimatedScrollHandler,
   useAnimatedRef,
   scrollTo,
-} from "react-native-reanimated";
+} from "../../utils/reanimated";
 
 /**
  * High-performance scroll synchronization hook using React Native Reanimated.

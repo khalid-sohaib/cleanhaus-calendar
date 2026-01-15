@@ -13,10 +13,20 @@ import {
   DEFAULT_PROPERTY_COLORS_DARK,
 } from "../utils/propertyColors";
 
-// Conditional image loading for web compatibility
-const CLEANING_ICON = Platform.OS === "web" 
-  ? null 
-  : require("../shared/sparks.png");
+// Cross-platform image loading with web fallback
+// Use conditional require to avoid webpack processing on web
+const getCleaningIcon = () => {
+  if (Platform.OS === "web") {
+    return null;
+  }
+  try {
+    return require("../shared/sparks.png");
+  } catch (e) {
+    return null;
+  }
+};
+
+const DEFAULT_CLEANING_ICON = getCleaningIcon();
 
 interface EventBarProps {
   position: EventPosition;
@@ -25,6 +35,7 @@ interface EventBarProps {
   availableProperties?: Array<{ id: number }>;
   propertyColors?: string[];
   propertyColorsDark?: string[];
+  cleaningIcon?: any; // Optional: override the default cleaning icon
 }
 
 /**
@@ -46,6 +57,7 @@ export const EventBar: React.FC<EventBarProps> = ({
   availableProperties = [],
   propertyColors = DEFAULT_PROPERTY_COLORS,
   propertyColorsDark = DEFAULT_PROPERTY_COLORS_DARK,
+  cleaningIcon,
 }) => {
   const { event, left, width, row } = position;
   const rowHeight = 24;
@@ -70,6 +82,9 @@ export const EventBar: React.FC<EventBarProps> = ({
   );
   const isCleaning =
     event.meta?.type === "cleaning" && event.meta?.jobTypeId === 1;
+
+  // Use provided icon or default icon
+  const iconToUse = cleaningIcon || DEFAULT_CLEANING_ICON;
 
   // Triangle dimensions (smaller and centered)
   const triangleSize = 6; // Small triangle
@@ -194,9 +209,9 @@ export const EventBar: React.FC<EventBarProps> = ({
         }}
       >
         {isCleaning ? (
-          CLEANING_ICON ? (
+          iconToUse ? (
             <Image
-              source={CLEANING_ICON}
+              source={iconToUse}
               style={{
                 width: cleaningIconSize,
                 height: cleaningIconSize,

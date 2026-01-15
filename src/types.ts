@@ -39,4 +39,7 @@ export interface CalendarProps {
   onFABPress?: () => void; // Optional: FAB press handler
   fabStyle?: import("react-native").ViewStyle; // Optional: Customize FAB styles (size, colors, position, etc.)
   renderFAB?: () => React.ReactElement | null; // Optional: FAB component renderer (for custom FAB components)
+  
+  // Icon props
+  cleaningIcon?: any; // Optional: custom cleaning icon (Image source) for cleaning events in MonthView
 }

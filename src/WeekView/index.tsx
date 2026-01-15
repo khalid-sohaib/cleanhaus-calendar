@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { View, StyleSheet, useWindowDimensions, Platform } from "react-native";
-import Animated, {
+import {
+  Animated,
   useSharedValue,
   useAnimatedScrollHandler,
-} from "react-native-reanimated";
+} from "../utils/reanimated";
 import { CalendarTheme, hexToRgba } from "../utils/theme";
 import { HOURS_IN_DAY } from "../utils/dateUtils";
 import {

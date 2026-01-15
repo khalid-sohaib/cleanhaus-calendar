@@ -36,10 +36,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical
 - TypeScript-first implementation
 - React Native 0.70+ support
-- React 18+ support
+- React 18+ and 19+ support
 - React Native Reanimated 3+ for smooth animations
 - Expo compatibility
 - Metro bundler support
 - Next.js 14+ support
 - Web platform support via react-native-web
+- Node.js 18+ support
 

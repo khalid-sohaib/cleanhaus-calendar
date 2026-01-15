@@ -38,6 +38,7 @@ export const CustomCalendar: React.FC<CalendarProps> = ({
   fabStyle,
   renderFAB,
   autoScrollToNow = false,
+  cleaningIcon,
 }) => {
   // Merge user theme with default theme
   const mergedTheme = mergeTheme(theme);
@@ -175,6 +176,7 @@ export const CustomCalendar: React.FC<CalendarProps> = ({
           availableProperties={availableProperties}
           propertyColors={propertyColors}
           propertyColorsDark={propertyColorsDark}
+          cleaningIcon={cleaningIcon}
         />
         {/* FAB removed from month view */}
       </View>

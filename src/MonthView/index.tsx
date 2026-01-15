@@ -59,6 +59,7 @@ export const MonthView: React.FC<MonthViewProps> = ({
   availableProperties = [],
   propertyColors,
   propertyColorsDark,
+  cleaningIcon,
 }) => {
   // Get initial screen width as estimate (accounts for padding/margins in real layout)
   // SSR-safe: Use 0 as fallback for server-side rendering
@@ -287,6 +288,7 @@ export const MonthView: React.FC<MonthViewProps> = ({
                     availableProperties={availableProperties}
                     propertyColors={propertyColors}
                     propertyColorsDark={propertyColorsDark}
+                    cleaningIcon={cleaningIcon}
                   />
                 ))}
           </View>

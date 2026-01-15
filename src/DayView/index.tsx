@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { View, StyleSheet, useWindowDimensions, Platform } from "react-native";
-import Animated, {
+import {
+  Animated,
   useSharedValue,
   useAnimatedScrollHandler,
   useAnimatedRef,
-} from "react-native-reanimated";
+} from "../utils/reanimated";
 import dayjs from "dayjs";
 import { CalendarEvent } from "../types";
 import { CalendarTheme } from "../utils/theme";

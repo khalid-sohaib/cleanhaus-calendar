@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { SharedValue } from "react-native-reanimated";
+import { SharedValue } from "../../utils/reanimated";
 import { CalendarEvent } from "../../types";
 import { CalendarTheme, getCalendarEventColor } from "../../utils/theme";
 import { HOURS_IN_DAY } from "../../utils/dateUtils";

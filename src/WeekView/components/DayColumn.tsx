@@ -6,7 +6,7 @@ import {
   NativeSyntheticEvent,
   NativeTouchEvent,
 } from "react-native";
-import { SharedValue } from "react-native-reanimated";
+import { SharedValue } from "../../utils/reanimated";
 import dayjs from "dayjs";
 import { CalendarEvent } from "../../types";
 import { CalendarTheme } from "../../utils/theme";

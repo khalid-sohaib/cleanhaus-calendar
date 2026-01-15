@@ -1,9 +1,10 @@
 import React from "react";
 import { TouchableOpacity, View, ViewStyle, StyleProp } from "react-native";
-import Animated, {
+import {
+  Animated,
   useAnimatedStyle,
   SharedValue,
-} from "react-native-reanimated";
+} from "../../utils/reanimated";
 import { CalendarEvent } from "../../types";
 import { CalendarTheme } from "../../utils/theme";
 import { getCalendarEventColor } from "../../utils/theme";

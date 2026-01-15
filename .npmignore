@@ -1,26 +1,27 @@
-# Source files (only ship compiled code from dist/)
-*.ts
-*.tsx
-!*.d.ts
-
 # Development files
 .git
 .github
 .vscode
 .idea
-tsconfig.json
-tsup.config.ts
 *.test.*
 *.spec.*
 __tests__/
 tests/
 
+# Build outputs (not needed when publishing source)
+dist/
+build/
+*.tsbuildinfo
+
 # Documentation (keep only essential)
 PACKAGING.md
 
-# Build config
-.gitignore
+# Build config (keep tsconfig.json for consumers who might need it)
+tsup.config.ts
 
 # Logs and temp
 *.log
 .DS_Store
+node_modules/
+package-lock.json
+yarn.lock

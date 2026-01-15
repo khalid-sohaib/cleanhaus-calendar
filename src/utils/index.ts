@@ -19,3 +19,9 @@ export * from "./eventHelpers";
 
 // Property colors
 export * from "./propertyColors";
+
+// Platform detection utilities
+export * from "./platform";
+
+// Reanimated wrapper (web-compatible)
+export * from "./reanimated";
