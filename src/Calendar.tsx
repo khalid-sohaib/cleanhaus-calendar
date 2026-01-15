@@ -42,6 +42,12 @@ export const CustomCalendar: React.FC<CalendarProps> = ({
   autoScrollToNow = false,
   cleaningIcon,
 }) => {
+  // SSR-safe: Only render on client to prevent hydration errors
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // Validate props in development mode
   useEffect(() => {
     if (process.env.NODE_ENV !== "production") {
@@ -58,6 +64,13 @@ export const CustomCalendar: React.FC<CalendarProps> = ({
 
   // Merge user theme with default theme
   const mergedTheme = mergeTheme(theme);
+  
+  // During SSR, render minimal placeholder (prevents hydration mismatch)
+  if (!isMounted) {
+    return (
+      <View style={[styles.container, { backgroundColor: mergedTheme.background }]} />
+    );
+  }
 
   // Get initial screen height as estimate for MonthView container sizing
   // SSR-safe: Use 0 as fallback for server-side rendering

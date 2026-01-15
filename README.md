@@ -212,7 +212,7 @@ function transformApiEvents(apiData: ApiEvent[]): CalendarEvent[] {
 - **Type-based Rendering**: Different styles for different event types
 - **Theme Customization**: Customizable colors and styles
 - **Cross-platform**: Works on React Native (iOS/Android) and Web (Next.js)
-- **SSR-safe**: Server-side rendering compatible
+- **SSR-safe**: Prevents hydration errors automatically
 
 ## Troubleshooting
 
@@ -225,6 +225,7 @@ function transformApiEvents(apiData: ApiEvent[]): CalendarEvent[] {
 - Use `--webpack` flag for development: `npm run dev -- --webpack`
 - Clear Next.js cache: `rm -rf .next`
 - Ensure `react-native-web` is installed
+
 - Verify the plugin is correctly applied in `next.config.ts`
 
 **Module not found errors:**
