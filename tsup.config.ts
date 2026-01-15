@@ -19,6 +19,5 @@ export default defineConfig({
   esbuildOptions(options) {
     options.jsx = "automatic";
   },
-  onSuccess: "tsc --emitDeclarationOnly --declaration",
 });
 

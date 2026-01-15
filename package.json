@@ -1,40 +1,33 @@
 {
   "name": "cleanhaus-calendar",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Cross-platform calendar component for React Native and Web",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
-  "react-native": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "react-native": "dist/index.js",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "react-native": "./src/index.ts",
-      "import": "./src/index.ts",
-      "require": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "react-native": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./next-plugin": "./next-plugin.js",
     "./package.json": "./package.json"
   },
   "files": [
-    "**/*.ts",
-    "**/*.tsx",
-    "src/shared/**/*.png",
+    "dist",
     "README.md",
     "LICENSE",
     "CHANGELOG.md",
-    "next-plugin.js",
-    "!**/*.test.ts",
-    "!**/*.test.tsx",
-    "!**/*.spec.ts",
-    "!**/*.spec.tsx",
-    "!node_modules",
-    "!dist"
+    "next-plugin.js"
   ],
   "scripts": {
     "build": "tsup",
     "type-check": "tsc --noEmit",
-    "prepublishOnly": "npm run type-check"
+    "prepublishOnly": "npm run type-check && npm run build"
   },
   "keywords": [
     "react-native",
@@ -49,7 +42,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cleanhaus/calendar-component.git"
+    "url": "https://github.com/cleanhaus/calendar-component.git"
   },
   "peerDependencies": {
     "calendarize": "^1.1.0",
