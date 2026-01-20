@@ -6,6 +6,7 @@ import {
   Text,
   Dimensions,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import type { LayoutChangeEvent } from "react-native";
 import { CalendarProps, CalendarEvent } from "./types";
@@ -293,7 +294,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     // Web-specific: Ensure container has constrained height for child scrolling
-    ...(typeof window !== "undefined" && {
+    // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+    ...(Platform.OS === "web" && {
       height: "100%",
       minHeight: 0, // Important for flex children on web
     }),

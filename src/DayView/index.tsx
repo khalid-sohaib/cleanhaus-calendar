@@ -422,36 +422,36 @@ const createStyles = (theme: CalendarTheme) =>
     container: {
       flex: 1,
       // Web-specific: Ensure container has constrained height for scrolling
-      ...(Platform.OS === "web" &&
-        typeof window !== "undefined" && {
-          height: "100%",
-          minHeight: 0, // Important for flex children on web
-        }),
+      // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+      ...(Platform.OS === "web" && {
+        height: "100%",
+        minHeight: 0, // Important for flex children on web
+      }),
     },
     contentContainer: {
       flex: 1,
       backgroundColor: theme.background,
       // Web-specific: Constrain height for scrolling
-      ...(Platform.OS === "web" &&
-        typeof window !== "undefined" && {
-          height: "100%",
-          minHeight: 0,
-        }),
+      // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+      ...(Platform.OS === "web" && {
+        height: "100%",
+        minHeight: 0,
+      }),
     },
     contentScroll: {
       flex: 1,
       paddingTop: CONTENT_PADDING_TOP + HEADER_HEIGHT, // Add header height to account for sticky header
       // Web-specific: Explicit height constraint and overflow for scrolling
-      ...(Platform.OS === "web" &&
-        typeof window !== "undefined" && {
-          height: "100%",
-          maxHeight: "100%",
-          minHeight: 0,
-          // @ts-ignore - web-specific CSS properties
-          overflowY: "auto",
-          overflowX: "hidden",
-          WebkitOverflowScrolling: "touch",
-        }),
+      // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+      ...(Platform.OS === "web" && {
+        height: "100%",
+        maxHeight: "100%",
+        minHeight: 0,
+        // @ts-ignore - web-specific CSS properties
+        overflowY: "auto",
+        overflowX: "hidden",
+        WebkitOverflowScrolling: "touch",
+      }),
     },
     content: {
       flexDirection: "row",
@@ -468,11 +468,11 @@ const createStyles = (theme: CalendarTheme) =>
       zIndex: 10,
       flexDirection: "row",
       // Web-specific: Sticky positioning
-      ...(Platform.OS === "web" &&
-        typeof window !== "undefined" && {
-          // @ts-ignore - web-specific CSS properties
-          position: "sticky",
-        }),
+      // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+      ...(Platform.OS === "web" && {
+        // @ts-ignore - web-specific CSS properties
+        position: "sticky",
+      }),
     },
     timeColumnSpacer: {
       width: TIME_COLUMN_WIDTH,
@@ -484,10 +484,10 @@ const createStyles = (theme: CalendarTheme) =>
     stickyHeaderScroll: {
       flex: 1,
       // Web-specific: Ensure horizontal scrolling works
-      ...(Platform.OS === "web" &&
-        typeof window !== "undefined" && {
-          minHeight: 0,
-        }),
+      // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+      ...(Platform.OS === "web" && {
+        minHeight: 0,
+      }),
     },
     stickyHeaderRow: {
       flexDirection: "row",
@@ -505,14 +505,14 @@ const createStyles = (theme: CalendarTheme) =>
     horizontalScroll: {
       flex: 1,
       // Web-specific: Ensure horizontal scrolling works
-      ...(Platform.OS === "web" &&
-        typeof window !== "undefined" && {
-          minHeight: 0,
-          // @ts-ignore - web-specific CSS properties
-          overflowX: "auto",
-          overflowY: "hidden",
-          WebkitOverflowScrolling: "touch",
-        }),
+      // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+      ...(Platform.OS === "web" && {
+        minHeight: 0,
+        // @ts-ignore - web-specific CSS properties
+        overflowX: "auto",
+        overflowY: "hidden",
+        WebkitOverflowScrolling: "touch",
+      }),
     },
     propertyLanesRow: {
       flexDirection: "row",

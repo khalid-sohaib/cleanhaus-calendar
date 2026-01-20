@@ -105,13 +105,13 @@ const createStyles = (
       position: "relative",
       zIndex: 1,
       // Web-specific: Make header sticky to top when scrolling vertically
-      ...(Platform.OS === "web" &&
-        typeof window !== "undefined" && {
-          // @ts-ignore - web-specific CSS properties
-          position: "sticky",
-          top: 0,
-          backgroundColor: theme.background, // Ensure background covers content when sticky
-        }),
+      // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+      ...(Platform.OS === "web" && {
+        // @ts-ignore - web-specific CSS properties
+        position: "sticky",
+        top: 0,
+        backgroundColor: theme.background, // Ensure background covers content when sticky
+      }),
     },
     headerRow: {
       flexDirection: "row",

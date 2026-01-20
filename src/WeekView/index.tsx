@@ -78,8 +78,8 @@ export const WeekView: React.FC<WeekViewProps> = ({
   const [containerWidth, setContainerWidth] = useState<number | null>(null);
   
   // Use actual container width instead of window width
-  // This ensures we match the actual available space, not the full window
-  const width = containerWidth ?? windowDimensions.width;
+  // Ensure consistent fallback for SSR (use 0 instead of windowDimensions.width which may differ)
+  const width = containerWidth ?? (typeof window !== "undefined" ? windowDimensions.width : 0);
   
   // Memoize calculations that depend on width
   const dayColumnWidth = useMemo(
@@ -472,11 +472,11 @@ const createStyles = (
       backgroundColor: theme.background,
       position: "relative",
       // Web-specific: Ensure container has constrained height for scrolling
-      ...(Platform.OS === "web" &&
-        typeof window !== "undefined" && {
-          height: "100%",
-          minHeight: 0, // Important for flex children on web
-        }),
+      // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+      ...(Platform.OS === "web" && {
+        height: "100%",
+        minHeight: 0, // Important for flex children on web
+      }),
     },
     todayHighlight: {
       position: "absolute",
@@ -501,16 +501,16 @@ const createStyles = (
       flex: 1,
       paddingTop: DAY_OVERFLOW_TOP_INSET,
       // Web-specific: Explicit height constraint and overflow for scrolling
-      ...(Platform.OS === "web" &&
-        typeof window !== "undefined" && {
-          height: "100%",
-          maxHeight: "100%",
-          minHeight: 0,
-          // @ts-ignore - web-specific CSS properties
-          overflowY: "auto",
-          overflowX: "auto", // Allow horizontal scroll if content is wider
-          WebkitOverflowScrolling: "touch",
-        }),
+      // Use Platform.OS instead of typeof window for SSR consistency (build-time constant)
+      ...(Platform.OS === "web" && {
+        height: "100%",
+        maxHeight: "100%",
+        minHeight: 0,
+        // @ts-ignore - web-specific CSS properties
+        overflowY: "auto",
+        overflowX: "auto", // Allow horizontal scroll if content is wider
+        WebkitOverflowScrolling: "touch",
+      }),
     },
     contentContainer: {
       // Tell ScrollView the exact content width - allows expansion and horizontal scroll
