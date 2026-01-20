@@ -34,6 +34,24 @@ const withCalendar = (nextConfig = {}) => {
         "react-native$": "react-native-web",
       };
 
+      // Define __DEV__ for react-native-reanimated compatibility
+      // Required for both client and server builds (SSR)
+      const webpack = require("webpack");
+      if (!config.plugins) {
+        config.plugins = [];
+      }
+      // Check if DefinePlugin already exists to avoid duplicates
+      const hasDevPlugin = config.plugins.some(
+        (plugin) => plugin && plugin.constructor.name === "DefinePlugin" && plugin.definitions && plugin.definitions.__DEV__
+      );
+      if (!hasDevPlugin) {
+        config.plugins.push(
+          new webpack.DefinePlugin({
+            __DEV__: JSON.stringify(process.env.NODE_ENV !== "production"),
+          })
+        );
+      }
+
       // Handle React Native asset extensions
       if (!config.resolve.extensions) {
         config.resolve.extensions = [];

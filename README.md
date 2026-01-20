@@ -92,7 +92,39 @@ Next.js 16+ uses Turbopack by default for development, but this package requires
 
 **Note:** Production builds automatically use webpack, so no additional configuration is needed for deployment.
 
-**3. Use the component:**
+**3. Layout Requirements:**
+
+The Calendar component requires its parent container to have explicit `height` and `width` defined. This ensures proper sizing and prevents layout issues, especially on web platforms.
+
+**For Web (Next.js/React):**
+```tsx
+// Option 1: Full viewport height
+<div style={{ height: "100vh", width: "100%" }}>
+  <Calendar {...props} />
+</div>
+
+// Option 2: Fixed height
+<div style={{ height: "600px", width: "100%" }}>
+  <Calendar {...props} />
+</div>
+
+// Option 3: Flex container (parent must have height)
+<div style={{ display: "flex", height: "100vh" }}>
+  <div style={{ flex: 1 }}>
+    <Calendar {...props} />
+  </div>
+</div>
+```
+
+**For React Native:**
+```tsx
+// Typically works automatically with flex: 1
+<View style={{ flex: 1 }}>
+  <Calendar {...props} />
+</View>
+```
+
+**4. Use the component:**
 
 ```tsx
 "use client";
@@ -116,16 +148,18 @@ export default function CalendarPage() {
   ];
 
   return (
-    <Calendar
-      events={events}
-      view={view}
-      date={date}
-      onDateChange={setDate}
-      onViewChange={setView}
-      onEventPress={(event) => {
-        // Handle event press
-      }}
-    />
+    <div style={{ height: "100vh", width: "100%" }}>
+      <Calendar
+        events={events}
+        view={view}
+        date={date}
+        onDateChange={setDate}
+        onViewChange={setView}
+        onEventPress={(event) => {
+          // Handle event press
+        }}
+      />
+    </div>
   );
 }
 ```
@@ -167,6 +201,23 @@ function transformApiEvents(apiData: ApiEvent[]): CalendarEvent[] {
 }
 ```
 
+### Using with Properties
+
+```typescript
+const properties = [
+  { id: 1, name: "Beach House" },
+  { id: 2, name: "Mountain Cabin" },
+];
+
+<Calendar
+  events={events}
+  date={date}
+  availableProperties={properties}  // Recommended for DayView
+  onDateChange={setDate}
+  onEventPress={handleEventPress}
+/>
+```
+
 ## API Reference
 
 ### Calendar Props
@@ -182,8 +233,8 @@ function transformApiEvents(apiData: ApiEvent[]): CalendarEvent[] {
 | `onDateTimeChange` | `(dateTime: Date) => void` | No | - | Unified handler for date+time changes (navigates to day view) |
 | `isLoading` | `boolean` | No | `false` | Show loading spinner |
 | `theme` | `Partial<CalendarTheme>` | No | - | Custom theme override |
-| `availableProperties` | `Array<{ id: number }>` | No | - | Properties for consistent color assignment |
-| `propertiesToShow` | `Array<{ id: number; name?: string }>` | No | - | Properties to show in DayView lanes |
+| `availableProperties` | `Array<{ id: number; name?: string }>` | No | `[]` | All properties in your system. Determines DayView lanes (shows even if empty) and ensures consistent colors. |
+| `propertiesToShow` | `Array<{ id: number; name?: string }>` | No | - | Subset of `availableProperties` to show in DayView. Omit to show all. |
 | `propertyColors` | `string[]` | No | - | Custom property colors array |
 | `propertyColorsDark` | `string[]` | No | - | Custom dark property colors array |
 | `cleaningIcon` | `any` | No | - | Custom icon for cleaning events |
@@ -207,12 +258,13 @@ function transformApiEvents(apiData: ApiEvent[]): CalendarEvent[] {
 
 - **Month View**: Calendar grid with event bars and swipe navigation
 - **Week View**: 7-day view with time-based positioning
-- **Day View**: Single-day view with property lanes
+- **Day View**: Single-day view with property lanes, sticky headers, and synchronized horizontal scrolling
 - **Multi-day Events**: Continuous bars across day cells
 - **Type-based Rendering**: Different styles for different event types
 - **Theme Customization**: Customizable colors and styles
 - **Cross-platform**: Works on React Native (iOS/Android) and Web (Next.js)
 - **SSR-safe**: Prevents hydration errors automatically
+- **Sticky Headers**: Property headers stay visible while scrolling vertically in Day View
 
 ## Troubleshooting
 
@@ -225,8 +277,12 @@ function transformApiEvents(apiData: ApiEvent[]): CalendarEvent[] {
 - Use `--webpack` flag for development: `npm run dev -- --webpack`
 - Clear Next.js cache: `rm -rf .next`
 - Ensure `react-native-web` is installed
-
 - Verify the plugin is correctly applied in `next.config.ts`
+
+**Layout and sizing issues:**
+- **Calendar not sizing correctly on web**: Ensure the parent container has explicit `height` and `width` defined (e.g., `height: "100vh"` or `height: "600px"`)
+- **Vertical scrolling in month view**: The parent container must have a constrained height for the calendar to calculate proper dimensions
+- **Calendar appears too small or too large**: Adjust the parent container's height to control the calendar size
 
 **Module not found errors:**
 - Restart the development server

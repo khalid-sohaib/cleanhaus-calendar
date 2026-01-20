@@ -26,6 +26,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "build:pack": "npm run build && npm pack",
     "type-check": "tsc --noEmit",
     "prepublishOnly": "npm run type-check && npm run build"
   },

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { View, StyleSheet, useWindowDimensions, Platform } from "react-native";
+import { View, StyleSheet, useWindowDimensions, Platform, ScrollView, LayoutChangeEvent } from "react-native";
 import {
   Animated,
   useSharedValue,
@@ -73,11 +73,26 @@ export const WeekView: React.FC<WeekViewProps> = ({
 }) => {
   // SSR-safe: useWindowDimensions may not be available during SSR
   const windowDimensions = useWindowDimensions();
-  const width = typeof window !== "undefined" ? windowDimensions.width : 0;
-  const dayColumnWidth = Math.floor((width - TIME_COLUMN_WIDTH) / 7);
+  // Use state for container width - triggers re-render when layout changes
+  // This is necessary because dayColumnWidth and styles depend on this value
+  const [containerWidth, setContainerWidth] = useState<number | null>(null);
+  
+  // Use actual container width instead of window width
+  // This ensures we match the actual available space, not the full window
+  const width = containerWidth ?? windowDimensions.width;
+  
+  // Memoize calculations that depend on width
+  const dayColumnWidth = useMemo(
+    () => Math.floor((width - TIME_COLUMN_WIDTH) / 7),
+    [width]
+  );
+  const totalContentWidth = useMemo(
+    () => TIME_COLUMN_WIDTH + (7 * dayColumnWidth),
+    [dayColumnWidth]
+  );
 
   const totalHeight = HOURS_IN_DAY * WEEK_VIEW_HOUR_HEIGHT;
-  const styles = createStyles(theme, totalHeight);
+  const styles = createStyles(theme, totalHeight, dayColumnWidth, totalContentWidth);
   const { minutesSinceStartOfDay, getDayIndexInRange } = useNowIndicator();
   const scrollY = useSharedValue(0);
 
@@ -187,7 +202,16 @@ export const WeekView: React.FC<WeekViewProps> = ({
         // Error handled by ErrorBoundary's onError callback
       }}
     >
-      <View style={styles.container}>
+      <View 
+        style={styles.container}
+        onLayout={(event: LayoutChangeEvent) => {
+          const { width: layoutWidth } = event.nativeEvent.layout;
+          // Only update state if width actually changed to avoid unnecessary re-renders
+          if (layoutWidth > 0 && containerWidth !== layoutWidth) {
+            setContainerWidth(layoutWidth);
+          }
+        }}
+      >
         {todayHighlightStyle && (
           <View
             pointerEvents='none'
@@ -207,6 +231,7 @@ export const WeekView: React.FC<WeekViewProps> = ({
         <WeekHeader
           weekStart={weekStart}
           theme={theme}
+          containerWidth={containerWidth ?? undefined}
           propertyBar={
             hasPropertyIndicators ? (
               <PropertyBar
@@ -230,107 +255,217 @@ export const WeekView: React.FC<WeekViewProps> = ({
           propertyBarHeight={hasPropertyIndicators ? propertyBarHeight : 0}
         />
 
-        <Animated.ScrollView
-          style={styles.contentScroll}
-          showsVerticalScrollIndicator
-          showsHorizontalScrollIndicator={false}
-          onScroll={useAnimatedScrollHandler({
-            onScroll: (event: { contentOffset: { y: number } }) => {
-              scrollY.value = event.contentOffset.y;
-            },
-          })}
-          scrollEventThrottle={16}
-        >
-          <View style={styles.content}>
-            <View style={styles.dayOverflowRow} pointerEvents='box-none'>
-              {dayOverflowCounts.map((count, i) => {
-                if (count <= 0) return null;
-                return (
-                  <View
-                    key={`day-top-overflow-${i}`}
-                    style={[
-                      styles.dayOverflowIndicator,
-                      {
-                        left:
-                          TIME_COLUMN_WIDTH +
-                          i * dayColumnWidth +
-                          dayColumnWidth / 2 -
-                          12,
-                      },
-                    ]}
-                  >
-                    <WeekOverflowIndicator
-                      theme={theme}
-                      count={count}
-                      showCount
-                      onPress={() => onShowMore?.(dayEventsPerDay[i].date)}
-                    />
-                  </View>
-                );
-              })}
-            </View>
-            <TimeRail
-              theme={theme}
-              hourHeight={WEEK_VIEW_HOUR_HEIGHT}
-              timeColumnWidth={TIME_COLUMN_WIDTH}
-              totalHeight={totalHeight}
-              gridLineHeight={GRID_LINE_HEIGHT}
-              timePaddingHorizontal={TIME_PADDING_HORIZONTAL}
-              timeTextOffset={TIME_TEXT_OFFSET}
-              timeFontSize={TIME_FONT_SIZE}
-              timeFontWeight={TIME_FONT_WEIGHT}
-            />
+        {Platform.OS === "web" ? (
+          <ScrollView
+            style={styles.contentScroll}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator
+            showsHorizontalScrollIndicator={false}
+            onScroll={(event: any) => {
+              scrollY.value = event.nativeEvent.contentOffset.y;
+            }}
+            scrollEventThrottle={16}
+          >
+            <View style={styles.content}>
+              <View style={styles.dayOverflowRow} pointerEvents='box-none'>
+                {dayOverflowCounts.map((count, i) => {
+                  if (count <= 0) return null;
+                  return (
+                    <View
+                      key={`day-top-overflow-${i}`}
+                      style={[
+                        styles.dayOverflowIndicator,
+                        {
+                          left:
+                            TIME_COLUMN_WIDTH +
+                            i * dayColumnWidth +
+                            dayColumnWidth / 2 -
+                            12,
+                        },
+                      ]}
+                    >
+                      <WeekOverflowIndicator
+                        theme={theme}
+                        count={count}
+                        showCount
+                        onPress={() => onShowMore?.(dayEventsPerDay[i].date)}
+                      />
+                    </View>
+                  );
+                })}
+              </View>
+              <TimeRail
+                theme={theme}
+                hourHeight={WEEK_VIEW_HOUR_HEIGHT}
+                timeColumnWidth={TIME_COLUMN_WIDTH}
+                totalHeight={totalHeight}
+                gridLineHeight={GRID_LINE_HEIGHT}
+                timePaddingHorizontal={TIME_PADDING_HORIZONTAL}
+                timeTextOffset={TIME_TEXT_OFFSET}
+                timeFontSize={TIME_FONT_SIZE}
+                timeFontWeight={TIME_FONT_WEIGHT}
+              />
 
-            {nowIndicatorTop !== null && dayColumnLeft !== null && (
-              <>
-                <NowIndicator
-                  top={nowIndicatorTop}
-                  theme={theme}
-                  lineLeft={TIME_COLUMN_WIDTH}
-                  lineWidth={0}
-                  dotLeft={TIME_COLUMN_WIDTH}
-                  thickness={2}
-                />
-                <NowIndicator
-                  top={nowIndicatorTop}
-                  theme={theme}
-                  lineLeft={dayColumnLeft}
-                  lineWidth={dayColumnWidth}
-                  showDot={false}
-                  thickness={2}
-                />
-              </>
-            )}
+              {nowIndicatorTop !== null && dayColumnLeft !== null && (
+                <>
+                  <NowIndicator
+                    top={nowIndicatorTop}
+                    theme={theme}
+                    lineLeft={TIME_COLUMN_WIDTH}
+                    lineWidth={0}
+                    dotLeft={TIME_COLUMN_WIDTH}
+                    thickness={2}
+                  />
+                  <NowIndicator
+                    top={nowIndicatorTop}
+                    theme={theme}
+                    lineLeft={dayColumnLeft}
+                    lineWidth={dayColumnWidth}
+                    showDot={false}
+                    thickness={2}
+                  />
+                </>
+              )}
 
-            {/* Day Columns */}
-            <View style={styles.dayColumnsRow}>
-              {dayEventsPerDay.map(({ date, events: dayEvents }, i) => (
-                <DayColumn
-                  propertyColors={propertyColors}
-                  propertyColorsDark={propertyColorsDark}
-                  key={`day-${i}`}
-                  dayDate={date}
-                  events={dayEvents}
-                  onEventPress={onEventPress}
-                  onShowMore={onShowMore}
-                  onPressCell={onPressCell}
-                  theme={theme}
-                  allEvents={expandedWeek ? events : dayEvents}
-                  dayColumnWidth={dayColumnWidth}
-                  availableProperties={availableProperties}
-                  scrollY={scrollY}
-                  contentPaddingTop={WEEK_VIEW_CONTENT_PADDING_TOP}
-                />
-              ))}
+              {/* Content Row - absolutely positioned to overlay TimeRail */}
+              <View style={styles.contentRow}>
+                {/* Time column spacer - matches WeekHeader */}
+                <View style={styles.timeColumnSpacer} />
+                {/* Day Columns - in flex row, absolutely positioned to overlay TimeRail */}
+                {dayEventsPerDay.map(({ date, events: dayEvents }, i) => (
+                  <DayColumn
+                    propertyColors={propertyColors}
+                    propertyColorsDark={propertyColorsDark}
+                    key={`day-${i}`}
+                    dayDate={date}
+                    events={dayEvents}
+                    onEventPress={onEventPress}
+                    onShowMore={onShowMore}
+                    onPressCell={onPressCell}
+                    theme={theme}
+                    allEvents={expandedWeek ? events : dayEvents}
+                    dayColumnWidth={dayColumnWidth}
+                    availableProperties={availableProperties}
+                    scrollY={scrollY}
+                    contentPaddingTop={WEEK_VIEW_CONTENT_PADDING_TOP}
+                  />
+                ))}
+              </View>
             </View>
-          </View>
-        </Animated.ScrollView>
+          </ScrollView>
+        ) : (
+          <Animated.ScrollView
+            style={styles.contentScroll}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator
+            showsHorizontalScrollIndicator={false}
+            onScroll={useAnimatedScrollHandler({
+              onScroll: (event: { contentOffset: { y: number } }) => {
+                'worklet';
+                scrollY.value = event.contentOffset.y;
+              },
+            })}
+            scrollEventThrottle={16}
+          >
+            <View style={styles.content}>
+              <View style={styles.dayOverflowRow} pointerEvents='box-none'>
+                {dayOverflowCounts.map((count, i) => {
+                  if (count <= 0) return null;
+                  return (
+                    <View
+                      key={`day-top-overflow-${i}`}
+                      style={[
+                        styles.dayOverflowIndicator,
+                        {
+                          left:
+                            TIME_COLUMN_WIDTH +
+                            i * dayColumnWidth +
+                            dayColumnWidth / 2 -
+                            12,
+                        },
+                      ]}
+                    >
+                      <WeekOverflowIndicator
+                        theme={theme}
+                        count={count}
+                        showCount
+                        onPress={() => onShowMore?.(dayEventsPerDay[i].date)}
+                      />
+                    </View>
+                  );
+                })}
+              </View>
+              <TimeRail
+                theme={theme}
+                hourHeight={WEEK_VIEW_HOUR_HEIGHT}
+                timeColumnWidth={TIME_COLUMN_WIDTH}
+                totalHeight={totalHeight}
+                gridLineHeight={GRID_LINE_HEIGHT}
+                timePaddingHorizontal={TIME_PADDING_HORIZONTAL}
+                timeTextOffset={TIME_TEXT_OFFSET}
+                timeFontSize={TIME_FONT_SIZE}
+                timeFontWeight={TIME_FONT_WEIGHT}
+              />
+
+              {nowIndicatorTop !== null && dayColumnLeft !== null && (
+                <>
+                  <NowIndicator
+                    top={nowIndicatorTop}
+                    theme={theme}
+                    lineLeft={TIME_COLUMN_WIDTH}
+                    lineWidth={0}
+                    dotLeft={TIME_COLUMN_WIDTH}
+                    thickness={2}
+                  />
+                  <NowIndicator
+                    top={nowIndicatorTop}
+                    theme={theme}
+                    lineLeft={dayColumnLeft}
+                    lineWidth={dayColumnWidth}
+                    showDot={false}
+                    thickness={2}
+                  />
+                </>
+              )}
+
+              {/* Content Row - absolutely positioned to overlay TimeRail */}
+              <View style={styles.contentRow}>
+                {/* Time column spacer - matches WeekHeader */}
+                <View style={styles.timeColumnSpacer} />
+                {/* Day Columns - in flex row, absolutely positioned to overlay TimeRail */}
+                {dayEventsPerDay.map(({ date, events: dayEvents }, i) => (
+                  <DayColumn
+                    propertyColors={propertyColors}
+                    propertyColorsDark={propertyColorsDark}
+                    key={`day-${i}`}
+                    dayDate={date}
+                    events={dayEvents}
+                    onEventPress={onEventPress}
+                    onShowMore={onShowMore}
+                    onPressCell={onPressCell}
+                    theme={theme}
+                    allEvents={expandedWeek ? events : dayEvents}
+                    dayColumnWidth={dayColumnWidth}
+                    availableProperties={availableProperties}
+                    scrollY={scrollY}
+                    contentPaddingTop={WEEK_VIEW_CONTENT_PADDING_TOP}
+                  />
+                ))}
+              </View>
+            </View>
+          </Animated.ScrollView>
+        )}
       </View>
     </CalendarErrorBoundary>
   );
 };
 
-const createStyles = (theme: CalendarTheme, totalHeight: number) =>
+const createStyles = (
+  theme: CalendarTheme,
+  totalHeight: number,
+  dayColumnWidth: number,
+  totalContentWidth: number
+) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -373,20 +508,36 @@ const createStyles = (theme: CalendarTheme, totalHeight: number) =>
           minHeight: 0,
           // @ts-ignore - web-specific CSS properties
           overflowY: "auto",
-          overflowX: "hidden",
+          overflowX: "auto", // Allow horizontal scroll if content is wider
           WebkitOverflowScrolling: "touch",
         }),
     },
+    contentContainer: {
+      // Tell ScrollView the exact content width - allows expansion and horizontal scroll
+      // Use explicit width, not minWidth, for React Native Web ScrollView
+      width: totalContentWidth,
+      minWidth: totalContentWidth,
+    },
     content: {
-      flexDirection: "row",
+      flexDirection: "column",
       minHeight: totalHeight,
       position: "relative",
       marginTop: PROPERTY_TO_GRID_GAP,
+      // No width needed - contentRow is absolute, parent doesn't need explicit width
     },
-    dayColumnsRow: {
+    contentRow: {
       flexDirection: "row",
       position: "absolute",
-      left: TIME_COLUMN_WIDTH,
+      top: 0,
+      left: 0,
+      // Absolutely positioned to overlay TimeRail (which is also absolutely positioned)
+      // Parent content View has explicit width, so ScrollView recognizes content size
+      width: totalContentWidth,
+      zIndex: 1, // Ensure it's above TimeRail (zIndex: 0)
+    },
+    timeColumnSpacer: {
+      width: TIME_COLUMN_WIDTH,
+      // Spacer matches WeekHeader's timeColumnSpacer
     },
     dayOverflowRow: {
       position: "absolute",

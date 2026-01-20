@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
+import { View, Text, StyleSheet, useWindowDimensions, Platform } from "react-native";
 import { CalendarTheme } from "../../utils/theme";
 import {
   HEADER_HEIGHT,
@@ -17,6 +17,7 @@ interface WeekHeaderProps {
   theme: CalendarTheme;
   propertyBar?: React.ReactNode | null;
   propertyBarHeight?: number; // computed height from parent
+  containerWidth?: number; // actual container width (optional, falls back to window width)
 }
 
 /**
@@ -24,11 +25,12 @@ interface WeekHeaderProps {
  * Displays day headers (S, M, T, W, T, F, S) with dates
  */
 export const WeekHeader: React.FC<WeekHeaderProps> = React.memo(
-  ({ weekStart, theme, propertyBar, propertyBarHeight = 0 }) => {
+  ({ weekStart, theme, propertyBar, propertyBarHeight = 0, containerWidth }) => {
     const days = ["S", "M", "T", "W", "T", "F", "S"];
     // SSR-safe: useWindowDimensions may not be available during SSR
     const windowDimensions = useWindowDimensions();
-    const width = typeof window !== 'undefined' ? windowDimensions.width : 0;
+    // Use containerWidth if provided, otherwise fall back to window width
+    const width = containerWidth || (typeof window !== 'undefined' ? windowDimensions.width : 0);
     const dayColumnWidth = Math.floor((width - TIME_COLUMN_WIDTH) / 7);
     const styles = createStyles(theme, dayColumnWidth, propertyBarHeight);
 
@@ -102,6 +104,14 @@ const createStyles = (
       backgroundColor: "transparent",
       position: "relative",
       zIndex: 1,
+      // Web-specific: Make header sticky to top when scrolling vertically
+      ...(Platform.OS === "web" &&
+        typeof window !== "undefined" && {
+          // @ts-ignore - web-specific CSS properties
+          position: "sticky",
+          top: 0,
+          backgroundColor: theme.background, // Ensure background covers content when sticky
+        }),
     },
     headerRow: {
       flexDirection: "row",
