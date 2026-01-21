@@ -1,11 +1,45 @@
-# cleanhaus-calendar
+# @cleanhaus/calendar
 
 Cross-platform calendar component for React Native and Next.js with Month, Week, and Day views. Features horizontal time positioning, multi-day event spanning, and type-based event rendering.
 
 ## Installation
 
+### Setup GitHub Packages Authentication
+
+This package is published to GitHub Packages. You need to configure authentication before installing.
+
+**1. Create a GitHub Personal Access Token (PAT):**
+- Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
+- Generate a new token with `read:packages` scope
+- Copy the token (you won't see it again)
+
+**2. Configure npm authentication:**
+
+Create a `.npmrc` file in your project root:
+
+```
+@cleanhaus:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GH_PACKAGES_TOKEN}
+```
+
+**3. Set the environment variable:**
+
+**For Next.js:**
+Add to your `.env.local` file:
+```
+GH_PACKAGES_TOKEN=your_token_here
+```
+
+**For React Native:**
+Export in your shell or add to your environment:
 ```bash
-npm install cleanhaus-calendar
+export GH_PACKAGES_TOKEN=your_token_here
+```
+
+**4. Install the package:**
+
+```bash
+npm install @cleanhaus/calendar
 ```
 
 ### Peer Dependencies
@@ -30,7 +64,7 @@ npm install react react-native react-native-web react-native-reanimated dayjs ca
 No additional configuration needed. Install and use:
 
 ```tsx
-import { Calendar, CalendarEvent } from "cleanhaus-calendar";
+import { Calendar, CalendarEvent } from "@cleanhaus/calendar";
 import { useState } from "react";
 
 const events: CalendarEvent[] = [
@@ -69,7 +103,7 @@ function App() {
 // next.config.ts
 import type { NextConfig } from "next";
 
-const withCalendar = require("cleanhaus-calendar/next-plugin");
+const withCalendar = require("@cleanhaus/calendar/next-plugin");
 
 const nextConfig: NextConfig = {
   // Your existing config
@@ -129,7 +163,7 @@ The Calendar component requires its parent container to have explicit `height` a
 ```tsx
 "use client";
 
-import { Calendar, CalendarEvent, ViewMode } from "cleanhaus-calendar";
+import { Calendar, CalendarEvent, ViewMode } from "@cleanhaus/calendar";
 import { useState } from "react";
 
 export default function CalendarPage() {

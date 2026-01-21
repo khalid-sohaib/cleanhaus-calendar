@@ -1,5 +1,5 @@
 /**
- * Web-specific entry point for cleanhaus-calendar
+ * Web-specific entry point for @cleanhaus/calendar
  * Sets up polyfills and ensures react-native-web is available
  */
 
