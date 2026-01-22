@@ -43,5 +43,4 @@ Thumbs.db
 
 # npm package files
 *.tgz
-package-lock.json
 yarn.lock

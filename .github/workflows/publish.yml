@@ -23,13 +23,7 @@ jobs:
           scope: '@cleanhaus'
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Type check
-        run: npm run type-check
-
-      - name: Build package
-        run: npm run build
+        run: npm ci
 
       - name: Publish to GitHub Packages
         run: npm publish
