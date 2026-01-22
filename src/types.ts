@@ -37,7 +37,9 @@ export interface CalendarProps {
   // FAB props
   showFAB?: boolean; // Optional: whether to show the FAB
   onFABPress?: () => void; // Optional: FAB press handler
-  fabStyle?: import("react-native").ViewStyle; // Optional: Customize FAB styles (size, colors, position, etc.)
+  fabStyle?: {
+    [key: string]: any;
+  }; // Optional: Customize FAB styles (size, colors, position, etc.) - matches react-native ViewStyle
   renderFAB?: () => React.ReactElement | null; // Optional: FAB component renderer (for custom FAB components)
   
   // Icon props
