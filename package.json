@@ -1,5 +1,5 @@
 {
-  "name": "@cleanhaus/calendar",
+  "name": "@khalid-sohaib/calendar",
   "version": "1.0.0",
   "description": "Cross-platform calendar component for React Native and Web",
   "main": "dist/index.js",
@@ -74,6 +74,6 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "@cleanhaus:registry": "https://npm.pkg.github.com"
+    "@khalid-sohaib:registry": "https://npm.pkg.github.com"
   }
 }

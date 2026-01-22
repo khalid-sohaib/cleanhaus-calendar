@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '18'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@cleanhaus'
+          scope: '@khalid-sohaib' # TODO: Change to '@cleanhaus' when repo is moved to organization
 
       - name: Install dependencies
         run: npm ci
