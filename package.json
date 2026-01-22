@@ -1,6 +1,6 @@
 {
   "name": "@khalid-sohaib/calendar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cross-platform calendar component for React Native and Web",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
