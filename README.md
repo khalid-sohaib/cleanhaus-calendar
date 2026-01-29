@@ -57,6 +57,10 @@ npm install react react-native react-native-web react-native-reanimated dayjs ca
 - calendarize ^1.1.0
 - Node >=18.0.0
 
+## Example app
+
+A minimal Next.js example is in `examples/next-app`. It uses **Next.js 16**, includes a **calendar header** (prev/next, Today, date/time display, view switcher), and demonstrates **most Calendar props** for a production-like reference. From the repo root run `npm run example:install` then `npm run example:dev` to run it. See [examples/next-app/README.md](examples/next-app/README.md) for how to run and how to reuse this setup in your own Next.js project.
+
 ## Quick Start
 
 ### React Native

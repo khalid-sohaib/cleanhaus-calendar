@@ -28,7 +28,10 @@
     "build": "tsup",
     "build:pack": "npm run build && npm pack",
     "type-check": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "example:install": "npm run build && cd examples/next-app && npm install --legacy-peer-deps",
+    "example:dev": "npm run build && cd examples/next-app && npm run dev",
+    "example:build": "cd examples/next-app && npm run build"
   },
   "keywords": [
     "react-native",

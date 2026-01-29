@@ -81,26 +81,24 @@ const withCalendar = (nextConfig = {}) => {
           rule && rule.test && rule.test.toString().includes("png|jpg|jpeg")
       );
 
+      // Support both @cleanhaus/calendar and @khalid-sohaib/calendar (scope-agnostic)
+      const calendarPackageInclude = [/node_modules\/@cleanhaus\/calendar/, /node_modules\/@khalid-sohaib\/calendar/];
       if (assetRuleIndex === -1) {
-        // Add new asset rule at the beginning to ensure it processes images
         config.module.rules.unshift({
           test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
           type: "asset/resource",
-          // Explicitly include node_modules/@cleanhaus/calendar
-          include: [/node_modules\/@cleanhaus\/calendar/],
+          include: calendarPackageInclude,
         });
       } else {
-        // Update existing rule to include node_modules
         const existingRule = config.module.rules[assetRuleIndex];
         if (existingRule) {
-          // Ensure it includes our package
           if (!existingRule.include) {
-            existingRule.include = [/node_modules\/@cleanhaus\/calendar/];
+            existingRule.include = calendarPackageInclude;
           } else if (Array.isArray(existingRule.include)) {
-            if (!existingRule.include.some((inc) => 
-              inc.toString().includes("@cleanhaus/calendar")
-            )) {
-              existingRule.include.push(/node_modules\/@cleanhaus\/calendar/);
+            const hasCalendar = (inc) =>
+              inc.toString().includes("@cleanhaus/calendar") || inc.toString().includes("@khalid-sohaib/calendar");
+            if (!existingRule.include.some(hasCalendar)) {
+              existingRule.include.push(...calendarPackageInclude);
             }
           }
         }
@@ -111,6 +109,8 @@ const withCalendar = (nextConfig = {}) => {
     transpilePackages: [
       ...(nextConfig.transpilePackages || []),
       "@cleanhaus/calendar",
+      "@khalid-sohaib/calendar",
+      "react-native-reanimated",
     ],
   };
 };

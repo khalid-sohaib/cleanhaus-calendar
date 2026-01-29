@@ -1,0 +1,9 @@
+# Next.js build output
+.next
+
+# Dependencies (already covered by root .gitignore)
+node_modules
+
+# Environment variables
+.env.local
+.env.*.local
